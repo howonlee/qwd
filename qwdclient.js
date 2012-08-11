@@ -1,11 +1,9 @@
-var socket = new io.Socket('127.0.0.1', {port:8080, connectTimeout:3000});
-
+var socket = io.connect("http://localhost:8080");
 var buffer = [];
-socket.connect();
 
 socket.on('connection', function(client){
-    client.send({buffer: buffer});
-    client.broadcast({ announcement: client.sessionId + ' connected' });
+    client.json.send({buffer: buffer});
+    client.broadcast.json.send({ announcement: client.id + ' connected' });
 });
 
 socket.on('connect_failed', function(){
@@ -20,7 +18,7 @@ socket.on('message', function(message){
 });
 
 socket.on('disconnect', function(client){ 
-    client.broadcast({ announcement: client.sessionId + ' disconnected' });
+    client.broadcast.json.send({ announcement: client.id + ' disconnected' });
 });
 
 function sendMessage(message){
@@ -31,7 +29,7 @@ function sendMessage(message){
         var msg = message; 
     }
     if(msg.length > 0){
-        if(socket.send({message:msg})){
+        if(socket.json.send({message:msg})){
             appendMessage('You: ' + msg);
         }
     }
