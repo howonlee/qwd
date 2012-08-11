@@ -26,7 +26,7 @@ socket.sockets.on('connection', function(client){
 
         client.on('passage', function(msg){ 
             socket.sockets.emit("passage", { 
-                message: client.id + ': Passage: ' + msg.message 
+                message: client.id + ': Passage: ' + msg.snippet.text 
                 });
         });
 
