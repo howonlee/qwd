@@ -1,5 +1,9 @@
 var socket = io.connect("http://localhost:8080");
 var buffer = [];
+var snippets = [];//all the snippets
+var passages = [];
+var questions = [];
+var tests = [];
 
 socket.on('connection', function(client){
     client.json.send({buffer: buffer});
@@ -10,12 +14,26 @@ socket.on('connect_failed', function(){
     alert('The connection to the server failed.');
 });
 
-socket.on('message', function(message){
+var dispMessage = function (message){
     buffer.push(message);
-    if(buffer.length > 15){
-        buffer.shift();    
+    if (buffer.length > 15){
+        buffer.shift();
     }
     appendMessage(message.message);
+}
+socket.on('message', dispMessage);
+
+socket.on('passage', function(message){
+    dispMessage(message);
+});
+
+socket.on('pass', function(message){
+    dispMessage(message);
+});
+socket.on('nopass', dispMessage);
+
+socket.on('question', function(message){
+    dispMessage(message);
 });
 
 socket.on('disconnect', function(client){ 
@@ -30,7 +48,7 @@ function sendMessage(message){
         var msg = message; 
     }
     if(msg.length > 0){
-        socket.emit("message", {message:msg})
+        socket.emit("passage", {message:msg})
     }
 }
 

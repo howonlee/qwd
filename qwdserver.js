@@ -19,25 +19,25 @@ socket.sockets.on('connection', function(client){
         client.broadcast.json.send({message: client.id + ' is now available'});
 
         client.on('question', function(msg){
-            socket.sockets.json.send({
+            socket.sockets.emit("question", {
                 message: client.id + ': Question: ' + msg.message
             });
         });//make something different for computer tests
 
-        client.on('message', function(msg){ 
-            socket.sockets.json.send({ 
+        client.on('passage', function(msg){ 
+            socket.sockets.emit("passage", { 
                 message: client.id + ': Passage: ' + msg.message 
                 });
         });
 
         client.on('pass', function(msg){
-            socket.sockets.json.send({ 
+            socket.sockets.emit("pass", { 
                 message: client.id + ': Pass: ' + msg.message
                 });
         });
 
         client.on('nopass', function(msg){
-            socket.sockets.json.send({ 
+            socket.sockets.emit("nopass", { 
                 message: client.id + ": Don't pass: " + msg.message
                 });
         });
@@ -45,6 +45,7 @@ socket.sockets.on('connection', function(client){
             socket.sockets.json.send({ 
                 message: client.id + ' is no longer available'
                 });
+            numPeople = numPeople - 1;
         });
     }
 });
