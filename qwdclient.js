@@ -28,6 +28,29 @@ var Snippet = function(id_, text_, type_, made_by_, parent_file_){
     return snip;
 }
 
+function exportAsText(passageOnly){
+    var phrases = [];
+    if (passageOnly){
+        for (var i = 0; i < snippets.length; i++){
+            if (snippets[i].snippet.type == "passage"){
+                phrases.push(snippets[i]);
+            }
+        }
+    } else {
+        for (var i = 0; i < snippets.length; i++){
+            if (snippets[i].snippet.type == "passage" ||
+                snippets[i].snippet.type == "question"){
+                phrases.push(snippets[i]);
+            }
+        }
+    }
+    var toReturn = "";
+    for (var i = 0; i < phrases.length; i++){
+        toReturn = toReturn + phrases[i] + "\n\n";
+    }
+    return toReturn;
+}
+
 var dispMessage = function (message){
     if (message.snippet){
         var msg = message.snippet.text;
@@ -68,18 +91,28 @@ function sendMessage(message){
     }
     if(msg.length > 0){
         var tempSnippet = Snippet(0, msg, "passage", client.id, "default");
-        socket.emit("passage", {
-                snippet : tempSnippet,
-                questions : [],
-                tests : [],
-                passed : false
-            });
+        passage = {
+            snippet : tempSnippet,
+            questions : [],
+            tests : [],
+            passed : false
+        }
+        socket.emit("passage", passage);
+        snippets.push(passage);
     }
 }
 
 function appendMessage(message){
     console.log(message);
     $('div#chat-box').append('<div class="msg">' + message + '</div>'); 
+}
+
+function makeTest(message){
+
+}
+
+function runTest(message){
+
 }
 
 function askQuestion(message){

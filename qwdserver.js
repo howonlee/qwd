@@ -30,6 +30,18 @@ socket.sockets.on('connection', function(client){
                 });
         });
 
+        client.on('maketest', function(msg){
+            socket.sockets.emit("maketest", {
+                message: client.id + ' has made a test: ' + msg.snippet.text
+            });
+        });
+
+        client.on('runtest', function(msg){
+            socket.sockets.emit("runtest", {
+                message: client.id + ' has run a test: ' + msg.snippet.text
+            });
+        });
+
         client.on('pass', function(msg){
             socket.sockets.emit("pass", { 
                 message: client.id + ': Pass: ' + msg.message
