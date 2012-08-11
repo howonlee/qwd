@@ -12,8 +12,9 @@ socket.on('connect_failed', function(){
 
 socket.on('message', function(message){
     buffer.push(message);
-    if(buffer.length > 15)
-    buffer.shift();     
+    if(buffer.length > 15){
+        buffer.shift();    
+    }
     appendMessage(message.message);
 });
 
@@ -29,14 +30,24 @@ function sendMessage(message){
         var msg = message; 
     }
     if(msg.length > 0){
-        if(socket.json.send({message:msg})){
-            appendMessage('You: ' + msg);
-        }
+        socket.emit("message", {message:msg})
     }
 }
 
 function appendMessage(message){
     $('div#chat-box').append('<div class="msg">' + message + '</div>'); 
+}
+
+function askQuestion(message){
+    if (!message){
+        var msg = $("input#message").val();
+        $("input#message").val("");
+    } else {
+        var msg = message;
+    }
+    if(msg.length > 0){
+        socket.emit("question", {message : msg});
+    }
 }
 
 function passTest(message){
@@ -46,19 +57,19 @@ function passTest(message){
     } else {
         var msg = message;
     }
-    if (socket.emit("pass", {message : msg})){
-        appendMessage("You: Pass. " + msg);
+    if(msg.length > 0){
+        socket.emit("pass", {message : msg});
     }
 }
 
-function dontPassTest(){
+function dontPassTest(message){
     if (!message){
         var msg = $("input#message").val();
         $("input#message").val("");
     } else {
         var msg = message;
     }
-    if (socket.emit("nopass", {message : msg})){
-        appendMessage("You: Don't Pass. " + msg);
+    if (msg.length > 0){
+        socket.emit("nopass", {message : msg})
     }
 }

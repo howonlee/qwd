@@ -18,25 +18,31 @@ socket.sockets.on('connection', function(client){
     if (numPeople <= 2){
         client.broadcast.json.send({message: client.id + ' is now available'});
 
+        client.on('question', function(msg){
+            socket.sockets.json.send({
+                message: client.id + ': Question: ' + msg.message
+            });
+        });//make something different for computer tests
+
         client.on('message', function(msg){ 
-            client.broadcast.json.send({ 
-                message: client.id + ': ' + msg.message 
+            socket.sockets.json.send({ 
+                message: client.id + ': Passage: ' + msg.message 
                 });
         });
 
         client.on('pass', function(msg){
-            client.broadcast.json.send({ 
-                message: client.id + ': Pass. ' + msg.message
+            socket.sockets.json.send({ 
+                message: client.id + ': Pass: ' + msg.message
                 });
         });
 
         client.on('nopass', function(msg){
-            client.broadcast.json.send({ 
-                message: client.id + ": Don't pass." + msg.message
+            socket.sockets.json.send({ 
+                message: client.id + ": Don't pass: " + msg.message
                 });
         });
         client.on('disconnect', function(){
-            client.broadcast.json.send({ 
+            socket.sockets.json.send({ 
                 message: client.id + ' is no longer available'
                 });
         });
