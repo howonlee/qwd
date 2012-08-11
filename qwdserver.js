@@ -20,7 +20,7 @@ socket.sockets.on('connection', function(client){
 
         client.on('question', function(msg){
             socket.sockets.emit("question", {
-                message: client.id + ': Question: ' + msg.message
+                message: client.id + ': Question: ' + msg.snippet.text
             });
         });//make something different for computer tests
 

@@ -90,7 +90,11 @@ function askQuestion(message){
         var msg = message;
     }
     if(msg.length > 0){
-        socket.emit("question", {message : msg});
+        var tempSnippet = Snippet(0, msg, "question", client.id, "default");
+        socket.emit("question", {
+                snippet : tempSnippet,
+                parent_passage : null
+            });
     }
 }
 
