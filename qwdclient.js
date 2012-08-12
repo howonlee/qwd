@@ -104,12 +104,14 @@ function getSnippets(){
     for (var i = 0; i < selection.length; i++){
         var currPlace = parseInt(selection[i]);
         var currSnippet = snippets[currPlace];
+        if (currSnippet.snippet){
         if (currSnippet.snippet.type === "passage"){
             snippetText.push(currSnippet.snippet.text);
         } else if (currSnippet.snippet.type === "question"){
             snippetText.push(currSnippet.snippet.text);
         } else if (currSnippet.snippet.type === "answer"){
             snippetText.push(currSnippet.snippet.text); //need to match later
+        }
         }
     }
     return snippetText.join("\n\n");
@@ -126,9 +128,16 @@ function getAllSnippets(){
 }
 
 function getCli(){
-    var cli = 0;
     var text = getAllSnippets();
-    alert("The Coleman-Liau Index is " + cli + ". That is, that's the US grade level that this writing is at.");
+    var numLetters = text.replace(/\s+/g, "" ).length;
+    var numWords = text.match(/\S+/g).length;
+    var numSentences = text.match(/([.!?])\s+/g).length;
+    alert(numWords);
+    alert(numLetters);
+    alert(numSentences);
+    var multiplier = 100 / numWords;
+    var cli = ((numLetters * multiplier * 0.0588) - (numSentences * multiplier * 0.296) - 15.8);
+    alert("The Coleman-Liau Index is " + cli + ". That is, that's the US grade level that this writing is at (so a first-year undergrad is 13, for example). Try to get a large sample.");
 }
 
 function resetSelection(){
