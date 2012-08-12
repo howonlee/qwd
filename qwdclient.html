@@ -12,6 +12,7 @@
         </style>
         <link rel="stylesheet" href="./bootstrap/css/bootstrap-responsive.css"/>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+        <script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
         <script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script> 
         <script src="./qwdclient.js"></script> 
     </head>
@@ -66,25 +67,13 @@
                     </div>
                     <br/>
                     <div class="btn-group">
-                        <button type="submit" class="btn" name="exporttext" id="exporttext" onclick="alert(exportAsText());" >Export as Text</button>
-                        <button type="submit" class="btn" name="exportjson" id="exportjson" onclick="alert(exportAsJSON());" >Export as JSON</button>
+                        <button type="submit" class="btn" name="exporttext" id="exporttext" onclick="alert(getAllSnippets());" >Export as Text</button>
+                        <button type="submit" class="btn" name="exportjson" id="exportjson" onclick="alert(JSON.stringify(snippets));" >Export as JSON</button>
                         <button type="submit" class="btn" name="exportbox" id="exportbox" onclick="exportAsBox();" >Export to Box</button>
                     </div>
                 </form>
             </div>
         </div>
-        <script src="./bootstrap/js/bootstrap-transition.js"></script>
-        <script src="./bootstrap/js/bootstrap-alert.js"></script>
-        <script src="./bootstrap/js/bootstrap-modal.js"></script>
-        <script src="./bootstrap/js/bootstrap-dropdown.js"></script>
-        <script src="./bootstrap/js/bootstrap-scrollspy.js"></script>
-        <script src="./bootstrap/js/bootstrap-tab.js"></script>
-        <script src="./bootstrap/js/bootstrap-tooltip.js"></script>
-        <script src="./bootstrap/js/bootstrap-popover.js"></script>
-        <script src="./bootstrap/js/bootstrap-button.js"></script>
-        <script src="./bootstrap/js/bootstrap-collapse.js"></script>
-        <script src="./bootstrap/js/bootstrap-carousel.js"></script>
-        <script src="./bootstrap/js/bootstrap-typeahead.js"></script>
     </body>
 </html>
 

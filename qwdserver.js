@@ -1,11 +1,25 @@
 var http = require('http'), // HTTP server
     io = require('socket.io'), // Socket.io
     fs = require('fs'); // File System
+    url = require('url'),
+    path = require('path'),
+    nstatic = require('node-static');
+
 function start(){
+    var file = new(nstatic.Server)('./public');
     function onRequest(req, res){
-        var pathname = url.parse(request.url).pathname;
-        res.writeHead(200, {'Content-Type': 'text/html'});
-        var output = fs.readFileSync('./qwdclient.html', 'utf8');
+        req.addListener('end', function() {
+            file.serve(req, res);
+        });
+        var pathname = url.parse(req.url).pathname;
+        var output = null;
+        if (pathname == '/') {
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            var output = fs.readFileSync('./qwdclient.html', 'utf8');
+        } else if (path.extname(pathname) === '.js'){
+            res.writeHead(200, {'Content-Type' : 'text/javascript'});
+            var output = fs.readFile(path.basename(pathname));
+        }
         res.end(output);
     }
     server = http.createServer(onRequest).listen(8080);
