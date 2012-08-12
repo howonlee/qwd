@@ -99,9 +99,11 @@ var dispAnswer = function(message){
 }
 
 var updateMessage = function(message){
-    ourSnippet = snippets[message.index];
-    ourSnippet.snippet.text = message.snippetText;
-    $('#' + message.index).parent().replaceWith(makeSnippet(name, ourSnippet.snippet.type, message.snippetText, message.index));
+    for (var i = 0; i < message.selection.length; i++){
+        ourSnippet = snippets[message.selection[i]];
+        ourSnippet.snippet.text = message.snippetText;
+        $('#' + message.selection[i]).parent().replaceWith(makeSnippet(name, ourSnippet.snippet.type, message.snippetText, message.selection[i]));
+    }
 }
 
 var deleteMessage = function(message){
@@ -185,8 +187,6 @@ function makeSnippet(user, mode, text, _id){
     toReturn = toReturn + user + ": " + mode + ": ";
     toReturn = toReturn + text;
     toReturn = toReturn + '</div>';
-    toReturn = toReturn + '<input type="hidden" id="' + _id + '" />'
-    toReturn = toReturn + '<button type="submit" class="btn" name="update" id="updatebtn" onclick="updateSnippet();">Update</button>';  
     toReturn = toReturn + '</div>';
     return toReturn;
 }
@@ -261,21 +261,15 @@ function answerQuestion(message){
 function updateSnippet(message){
     if (!message){
         var msgText = $("input#message").val();
-        if (selection.length === 1){
-            var snippetPos = selection[0];
-            $("input#message").val("");
-        } else {
-            alert("Make exactly one selection");
-            return false;
-        }
+        var updateSelection = selection;
     } else {
         var msgText = message.text;
-        var snippetPos = message.snippetPos;
+        var updateSelection = message.selection;
     }
     if (msgText.length > 0){
         socket.emit("update", {
             snippetText : msgText,
-            index : snippetPos
+            selection : updateSelection
         });
     }
 }
