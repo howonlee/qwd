@@ -89,6 +89,11 @@ var updateMessage = function(message){
     $('#' + message.index).parent().replaceWith(makeSnippet(client.id, ourSnippet.snippet.type, message.snippetText, message.index));
 }
 
+var deleteMessage = function(message){
+    snippets.splice(message.index, 1);
+    $('#' + message.index).parent().remove();
+}
+
 socket.on('message', dispMessage);
 
 socket.on('passage', function(message){
@@ -107,6 +112,9 @@ socket.on('update', function(message){
     updateMessage(message);
 });
 
+socket.on('delete', function(message){
+    deleteMessage(message);
+});
 
 //resets display to selection after selection change
 function normDisplay(){
@@ -164,7 +172,6 @@ function makeSnippet(user, mode, text, _id){
     toReturn = toReturn + '</div>';
     toReturn = toReturn + '<input type="hidden" id="' + _id + '" />'
     toReturn = toReturn + '<button type="submit" class="btn" name="update" id="updatebtn" onclick="updateSnippet();">Update</button>';  
-    toReturn = toReturn + '<button type="submit" class="btn" name="delete" id="deletebtn" onclick="deleteSnippet();">Delete</button>';  
     toReturn = toReturn + '</div>';
     return toReturn;
 }
@@ -242,3 +249,12 @@ function updateSnippet(message){
         });
     }
 }
+
+function deleteSnippet(message){
+    for (var i = 0; i < selection.length; i++){
+        socket.emit("delete", {
+            index : selection[i]
+        });
+    }
+}
+

@@ -33,6 +33,10 @@ socket.sockets.on('connection', function(client){
         client.on('update', function(msg){
             socket.sockets.emit("update", msg);
         });
+
+        client.on('delete', function(msg){
+            socket.sockets.emit("delete", msg);
+        });
         
         client.on('disconnect', function(){
             socket.sockets.json.send({ 
