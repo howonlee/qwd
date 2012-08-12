@@ -3,6 +3,7 @@ var buffer = [];
 var snippets = [];//all the snippets
 var passages = [];
 var questions = [];
+var answers = []
 var tests = [];
 var selection = [];
 var currId = 0;
@@ -42,41 +43,6 @@ var Snippet = function(id_, text_, type_, made_by_, parent_file_){
     return snip;
 }
 
-function exportAsText(_selection){
-    var phrases = [];
-    if (_selection){
-        for (var i = 0; i < snippets.length; i++){
-            if (snippets[i].snippet.type == "passage"){
-                phrases.push(snippets[i]);
-            }
-        }
-    } else {
-        for (var i = 0; i < snippets.length; i++){
-            if (snippets[i].snippet.type == "passage" ||
-                snippets[i].snippet.type == "question"){
-                phrases.push(snippets[i]);
-            }
-        }
-    }
-    var toReturn = "";
-    for (var i = 0; i < phrases.length; i++){
-        toReturn = toReturn + phrases[i].snippet.text + "\n\n";
-    }
-    return toReturn;
-}
-
-function exportAsJson(_selection){
-
-}
-
-function exportAsXML(_selection){
-
-}
-
-function exportAsBox(_selection){
-    
-}
-
 var dispMessage = function (message){
     if (message.snippet){
         var msg = message.snippet.text;
@@ -84,6 +50,9 @@ var dispMessage = function (message){
         if (buffer.length > 15){
             buffer.shift();
         }
+        var pos = snippets.push(message);
+        if (message.snippet.type === "passage"){ passages.push(pos); }
+        if (message.snippet.type === "question"){ questions.push(pos); }
         appendSnippet(message.snippet.made_by, message.snippet.type, msg);
     } else {
         appendSnippet("admin", "note", message.message);
@@ -92,7 +61,10 @@ var dispMessage = function (message){
 
 var dispAnswer = function(message){
     if (message.snippet && message.parentQuestion){
+        var pos = snippets.push(message);
+        answers.push(pos);
         $('#' + message.parentQuestion).parent().append(makeSnippet(message.snippet.made_by, message.snippet.type, message.snippet.text, currId));
+        $('div#' + currId).click(toggleSelection);
         snippets[parseInt(message.parentQuestion)].answers.push(currId);
         currId = currId + 1;
     }
@@ -103,56 +75,33 @@ var updateMessage = function(message){
         ourSnippet = snippets[message.selection[i]];
         ourSnippet.snippet.text = message.snippetText;
         $('#' + message.selection[i]).parent().replaceWith(makeSnippet(name, ourSnippet.snippet.type, message.snippetText, message.selection[i]));
+        $('div#' + currId).click(toggleSelection);
     }
 }
 
 var deleteMessage = function(message){
     snippets.splice(message.index, 1);
     $('#' + message.index).parent().remove();
+    stripArray = function(array){
+        var curr = $.inArray(message.index, array);
+        if (curr !== -1) { array.splice(curr, 1); }
+    }
+    stripArray(passages);
+    stripArray(questions);
+    stripArray(answers);
+    resetSelection();
 }
 
 socket.on('message', dispMessage);
+socket.on('passage', dispMessage);
+socket.on('question', dispMessage);
+socket.on('answer', dispAnswer);
+socket.on('update', updateMessage);
+socket.on('delete', deleteMessage);
 
-socket.on('passage', function(message){
-    dispMessage(message);
-});
-
-socket.on('question', function(message){
-    dispMessage(message);
-});
-
-socket.on('answer', function(message){
-    dispAnswer(message);
-});
-
-socket.on('update', function(message){
-    updateMessage(message);
-});
-
-socket.on('delete', function(message){
-    deleteMessage(message);
-});
-
-//resets display to selection after selection change
-function normDisplay(){
-    for (var i = 0; i < snippets.length; i++){
-        $('div#' + our_id).attr("class", "alert");
-    }
-    for (var i = 0; i < selection.length; i++){
-        $('div#' + our_id).toggleClass("alert-info");
-    }
+function resetSelection(){
+    
 }
-
-function setSelection(newSelection){
-//newSelection should be an array. if it's not, then we just empty selection
-    if (newSelection){
-        selection = newSelection;
-    } else {
-        selection = []
-    }
-    normDisplay();
-}
-
 function toggleSelection(evt){
     var our_id = evt.target.id;
     var index = $.inArray(our_id, selection);
@@ -172,14 +121,6 @@ function toggleCodeMode(){
     }
 }
 
-function appendSnippet(user, mode, message){
-    console.log(message);
-    $('div#chat-box')
-        .append(makeSnippet(user, mode, message, currId));
-    $('div#' + currId).click(toggleSelection);
-    currId = currId + 1;
-}
-
 function makeSnippet(user, mode, text, _id){
     var toReturn = '<div class="alert"><div id= "';
     toReturn = toReturn + _id;
@@ -190,6 +131,15 @@ function makeSnippet(user, mode, text, _id){
     toReturn = toReturn + '</div>';
     return toReturn;
 }
+
+function appendSnippet(user, mode, message){
+    console.log(message);
+    $('div#chat-box')
+        .append(makeSnippet(user, mode, message, currId));
+    $('div#' + currId).click(toggleSelection);
+    currId = currId + 1;
+}
+
 //feed it in a function
 function runTest(test){
     //don't do anything for now
@@ -208,7 +158,6 @@ function sendMessage(message){
             snippet : tempSnippet
         };
         socket.emit("passage", passage);
-        snippets.push(passage);
     }
 }
 
@@ -226,7 +175,6 @@ function askQuestion(message){
             answers : []
         };
         socket.emit("question", question);
-        snippets.push(question);
     }
 }
 
@@ -254,7 +202,6 @@ function answerQuestion(message){
             parentQuestion : questionPos
         };
         socket.emit("answer", answer);
-        snippets.push(answer);
     }
 }
 
