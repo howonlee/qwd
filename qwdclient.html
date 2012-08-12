@@ -52,6 +52,7 @@
                         <button type="submit" class="btn" name="question" id="question" onclick="askQuestion();">Ask Question</button>
                         <button type="submit" class="btn" name="answer" id="answer" onclick="answerQuestion();">Answer Question</button>
                     </div>
+                    <div class="span6 offset4 dataviz"></div>
                     <br/>
                     <div class="btn-group">
                         <button type="submit" class="btn" name="delbutton" id="delbutton" onclick="deleteSnippet();" >Delete Selected</button>
@@ -62,15 +63,10 @@
                     <br/>
                     <div class="btn-group">
                         <button type="submit" class="btn" name="cli" id="clibutton" onclick="getCli();" >Coleman-Liau Index</button>
-                        <button type="submit" class="btn" name="regex" id="regexbutton" onclick="updateSnippet();" >Regexp</button>
-                        <button type="submit" class="btn" name="codemode" id="codemodebutton" onclick="updateSnippet();" >Code Mode</button>
-                    </div>
-                    <br/>
-                    <div class="btn-group">
                         <button type="submit" class="btn" name="exporttext" id="exporttext" onclick="save(getAllSnippets());" >Export as Text</button>
                         <button type="submit" class="btn" name="exportjson" id="exportjson" onclick="save(JSON.stringify(snippets));" >Export as JSON</button>
-                        <button type="submit" class="btn" name="exportbox" id="exportbox" onclick="exportAsBox();" >Export to Box</button>
                     </div>
+                    <br/>
                 </form>
             </div>
         </div>
