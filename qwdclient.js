@@ -132,7 +132,6 @@ function getAllSnippets(){
 function getCli(){
     var cli = 0;
     var text = getAllSnippets();
-    alert(text);
     alert("The Coleman-Liau Index is " + cli + ". That is, that's the US grade level that this writing is at.");
 }
 
