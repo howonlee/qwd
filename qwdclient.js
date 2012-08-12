@@ -175,6 +175,29 @@ function toggleCodeMode(){
     }
 }
 
+function post(path, parameters){
+    var form = $('<form></form>');
+    form.attr("method", "post");
+    form.attr("action", path);
+
+    $.each(parameters, function(key, value){
+        var field= $('<input></input>');
+        field.attr("type", "hidden");
+        field.attr("name", key);
+        field.attr("value", value);
+        form.append(field);
+    });
+
+    $(document.body).append(form);
+    form.submit();
+}
+
+function save(contents){
+    var title = prompt("What do you want to name this file?", "whoopsydaisy.txt");
+    message = { name : title, content : contents };
+    socket.emit("save", message);
+}
+
 function makeSnippet(user, mode, text, _id){
     var toReturn = '<div class="alert"><div class="snippet" id= "';
     toReturn = toReturn + _id;
