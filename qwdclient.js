@@ -95,7 +95,7 @@ function sendMessage(message){
         var msg = message; 
     }
     if(msg.length > 0){
-        var tempSnippet = Snippet(0, msg, "passage", client.id, "default");
+        var tempSnippet = Snippet(client.id, msg, "passage", client.id, "default");
         passage = {
             snippet : tempSnippet,
             questions : [],
@@ -107,6 +107,15 @@ function sendMessage(message){
     }
 }
 
+function setSelection(newSelection){
+//newSelection should be an array. if it's not, then we just empty selection
+    if (newSelection){
+        selection = newSelection;
+    } else {
+        selection = []
+    }
+}
+
 function toggleSelection(evt){
     var our_id = evt.target.id;
     var index = $.inArray(our_id, selection);
@@ -115,13 +124,13 @@ function toggleSelection(evt){
     } else {
         selection.splice(index, 1);
     }
-    $('#' + our_id).toggleClass("selected");
+    $('#' + our_id).toggleClass("label label-info");
 }
 
 function appendSnippet(message){
     console.log(message);
     $('div#chat-box')
-        .append('<div class="msg" id = "' + currId + '">' + message + '</div>');
+        .append('<pre class="prettyprint"><div class="msg" id = "' + currId + '">' + message + '</div></pre>');
     $('div#' + currId).click(toggleSelection);
     currId = currId + 1;
 }
@@ -142,7 +151,7 @@ function askQuestion(message){
         var msg = message;
     }
     if(msg.length > 0){
-        var tempSnippet = Snippet(0, msg, "question", client.id, "default");
+        var tempSnippet = Snippet(client.id, msg, "question", client.id, "default");
         socket.emit("question", {
                 snippet : tempSnippet,
                 parent_passage : null

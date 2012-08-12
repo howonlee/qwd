@@ -1,26 +1,71 @@
 <DOCTYPE html>
 <html>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-<title>Chatroom</title>
-<link rel="stylesheet" type="text/css" href="./qwdtheme.css"/>
-<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-<script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script> 
-<script src="./qwdclient.js"></script> 
-</head>
-<body>
-<div id="chat-box"></div>
-<div id="chat-field">
-    <form method="post" action="" onsubmit="return false;" />
-    <input type="text" name="message" id="message" value="" />
-    <input id="client" name="client" value="" type="hidden" />
-    <input type="submit" class="button" name="send" id="send" value="Send" onclick="sendMessage();" />
-    <input type="submit" class="button" name="pass" id="pass" value="Pass" onclick="passTest();" />
-    <input type="submit" class="button" name="dontpass" id="dontpass" value="Don't Pass" onclick="dontPassTest();" />
-    <input type="submit" class="button" name="question" id="question" value="Ask" onclick="askQuestion();" />
-    <input type="submit" class="button" name="exporttext" id="exporttext" value="Export As Text" onclick="alert(exportAsText());" />
-    </form>
-</div>
-</body>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Chatroom</title>
+        <link rel="stylesheet" type="text/css" href="./bootstrap/css/bootstrap.css"/>
+        <style>
+            body {
+                padding-top: 60px;
+            }
+        </style>
+        <link rel="stylesheet" href="./bootstrap/css/bootstrap-responsive.css"/>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+        <script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script> 
+        <script src="./qwdclient.js"></script> 
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </a>
+                    <a class="brand" href="#">QWD</a>
+                    <div class="nav-collapse">
+                        <ul class="nav">
+                            <li class="active"><a href="#">Home</a></li>
+                            <li><a href="#">About</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="hero-unit">
+                <h1>QWD</h1>
+                <p>Because I can't write in anything but a chatroom</p>
+            </div>
+            <div class="span12" id="chat-box"></div>
+            <div class="row" id="chat-field">
+                <form class="well" method="post" action="" onsubmit="return false;" />
+                    <input class="span12" type="text" name="message" id="message" value="" placeholder="Chat here"/>
+                    <input id="client" name="client" value="" type="hidden" />
+                    <br/>
+                    <button type="submit" class="btn btn-primary" name="send" id="send"onclick="sendMessage();" >Send</button>
+                    <button type="submit" class="btn" name="pass" id="pass" onclick="passTest();" >Pass</button>
+                    <button type="submit" class="btn" name="dontpass" id="dontpass" onclick="dontPassTest();">Don't Pass</button>
+                    <button type="submit" class="btn" name="question" id="question" onclick="askQuestion();">Ask Question</button>
+                    <button type="submit" class="btn" name="exporttext" id="exporttext" onclick="alert(exportAsText());" >Export as Text</button>
+                </form>
+            </div>
+        </div>
+        <script src="./bootstrap/js/bootstrap-transition.js"></script>
+        <script src="./bootstrap/js/bootstrap-alert.js"></script>
+        <script src="./bootstrap/js/bootstrap-modal.js"></script>
+        <script src="./bootstrap/js/bootstrap-dropdown.js"></script>
+        <script src="./bootstrap/js/bootstrap-scrollspy.js"></script>
+        <script src="./bootstrap/js/bootstrap-tab.js"></script>
+        <script src="./bootstrap/js/bootstrap-tooltip.js"></script>
+        <script src="./bootstrap/js/bootstrap-popover.js"></script>
+        <script src="./bootstrap/js/bootstrap-button.js"></script>
+        <script src="./bootstrap/js/bootstrap-collapse.js"></script>
+        <script src="./bootstrap/js/bootstrap-carousel.js"></script>
+        <script src="./bootstrap/js/bootstrap-typeahead.js"></script>
+    </body>
 </html>
 
