@@ -108,12 +108,8 @@ function getSnippets(){
             snippetText.push(currSnippet.snippet.text);
         } else if (currSnippet.snippet.type === "question"){
             snippetText.push(currSnippet.snippet.text);
-            if (currSnippet.answers){
-                for (var i = 0; i < currSnippet.answers.length; i++){
-                    var currPos = currSnippet.answers[i];
-                    snippetText.push(snippets[currPos].snippet.text);
-                }
-            }
+        } else if (currSnippet.snippet.type === "answer"){
+            snippetText.push(currSnippet.snippet.text); //need to match later
         }
     }
     return snippetText.join("\n\n");
