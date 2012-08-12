@@ -18,11 +18,9 @@ $(document).ready(function(){
 
 socket.on('connection', function(client){
     client.json.send({buffer: buffer});
-    client.broadcast.json.send({ announcement: client.id + ' connected' });
 });
 
 socket.on('disconnect', function(client){ 
-    client.broadcast.json.send({ announcement: client.id + ' disconnected' });
 });
 
 socket.on('connect_failed', function(){
@@ -110,7 +108,7 @@ function toggleSelection(evt){
     } else {
         selection.splice(index, 1);
     }
-    $('div#' + our_id).toggleClass("alert-info");
+    $('div#' + our_id).parent().toggleClass("alert-info");
 }
 
 function toggleCodeMode(){

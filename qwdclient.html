@@ -46,14 +46,30 @@
                     <input class="span12" type="text" name="message" id="message" value="" placeholder="Chat here"/>
                     <input id="client" name="client" value="" type="hidden" />
                     <br/>
-                    <button type="submit" class="btn btn-primary" name="send" id="send" onclick="sendMessage();" >Send</button>
-                    <button type="submit" class="btn" name="question" id="question" onclick="askQuestion();">Ask Question</button>
-                    <button type="submit" class="btn" name="answer" id="answer" onclick="answerQuestion();">Answer Question</button>
-                    <button type="submit" class="btn" name="exporttext" id="exporttext" onclick="alert(exportAsText());" >Export as Text</button>
-                    <button type="submit" class="btn" name="exportjson" id="exportjson" onclick="alert(exportAsJSON());" >Export as JSON</button>
-                    <button type="submit" class="btn" name="exportbox" id="exportbox" onclick="exportAsBox();" >Export to Box</button>
-                    <button type="submit" class="btn" name="delbutton" id="delbutton" onclick="deleteSnippet();" >Delete Selected</button>
-                    <button type="submit" class="btn" name="updatebutton" id="updatebutton" onclick="updateSnippet();" >Update Selected</button>
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-primary" name="send" id="send" onclick="sendMessage();" >Send</button>
+                        <button type="submit" class="btn" name="question" id="question" onclick="askQuestion();">Ask Question</button>
+                        <button type="submit" class="btn" name="answer" id="answer" onclick="answerQuestion();">Answer Question</button>
+                    </div>
+                    <br/>
+                    <div class="btn-group">
+                        <button type="submit" class="btn" name="delbutton" id="delbutton" onclick="deleteSnippet();" >Delete Selected</button>
+                        <button type="submit" class="btn" name="updatebutton" id="updatebutton" onclick="updateSnippet();" >Update Selected</button>
+                        <button type="submit" class="btn" name="selectbutton" id="selectbutton" onclick="updateSnippet();" >Select All</button>
+                    </div>
+                    <br/>
+                    <div class="btn-group">
+                        <button type="submit" class="btn" name="cli" id="clibutton" onclick="updateSnippet();" >Coleman-Liau Index</button>
+                        <button type="submit" class="btn" name="neatify" id="neatifybutton" onclick="updateSnippet();" >Neatify</button>
+                        <button type="submit" class="btn" name="regex" id="regexbutton" onclick="updateSnippet();" >Regexp</button>
+                    </div>
+                    <br/>
+                    <div class="btn-group">
+                        <button type="submit" class="btn" name="exporttext" id="exporttext" onclick="alert(exportAsText());" >Export as Text</button>
+                        <button type="submit" class="btn" name="exportjson" id="exportjson" onclick="alert(exportAsJSON());" >Export as JSON</button>
+                        <button type="submit" class="btn" name="exportbox" id="exportbox" onclick="exportAsBox();" >Export to Box</button>
+                    </div>
+
                 </form>
             </div>
         </div>
