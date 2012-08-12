@@ -3,6 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Chatroom</title>
+<link rel="stylesheet" type="text/css" href="./qwdtheme.css"/>
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
 <script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script> 
 <script src="./qwdclient.js"></script> 
@@ -17,7 +18,7 @@
     <input type="submit" class="button" name="pass" id="pass" value="Pass" onclick="passTest();" />
     <input type="submit" class="button" name="dontpass" id="dontpass" value="Don't Pass" onclick="dontPassTest();" />
     <input type="submit" class="button" name="question" id="question" value="Ask" onclick="askQuestion();" />
-    <input type="submit" class="button" name="exporttext" id="exporttext" value="Export As Text" onclick="alert(exportAsText();)" />
+    <input type="submit" class="button" name="exporttext" id="exporttext" value="Export As Text" onclick="alert(exportAsText());" />
     </form>
 </div>
 </body>

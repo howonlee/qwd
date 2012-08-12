@@ -4,6 +4,8 @@ var snippets = [];//all the snippets
 var passages = [];
 var questions = [];
 var tests = [];
+var selection = [];
+var currId = 0;
 
 socket.on('connection', function(client){
     client.json.send({buffer: buffer});
@@ -46,7 +48,7 @@ function exportAsText(passageOnly){
     }
     var toReturn = "";
     for (var i = 0; i < phrases.length; i++){
-        toReturn = toReturn + phrases[i] + "\n\n";
+        toReturn = toReturn + phrases[i].snippet.text + "\n\n";
     }
     return toReturn;
 }
@@ -61,7 +63,7 @@ var dispMessage = function (message){
     if (buffer.length > 15){
         buffer.shift();
     }
-    appendMessage(msg);
+    appendSnippet(msg);
 }
 socket.on('message', dispMessage);
 
@@ -72,7 +74,10 @@ socket.on('passage', function(message){
 socket.on('pass', function(message){
     dispMessage(message);
 });
-socket.on('nopass', dispMessage);
+
+socket.on('nopass', function(message){
+    dispMessage(message);
+});
 
 socket.on('question', function(message){
     dispMessage(message);
@@ -102,17 +107,31 @@ function sendMessage(message){
     }
 }
 
-function appendMessage(message){
+function toggleSelection(evt){
+    var our_id = evt.target.id;
+    var index = $.inArray(our_id, selection);
+    if (index === -1){
+        selection.push(our_id);
+    } else {
+        selection.splice(index, 1);
+    }
+    $('#' + our_id).toggleClass("selected");
+}
+
+function appendSnippet(message){
     console.log(message);
-    $('div#chat-box').append('<div class="msg">' + message + '</div>'); 
+    $('div#chat-box')
+        .append('<div class="msg" id = "' + currId + '">' + message + '</div>');
+    $('div#' + currId).click(toggleSelection);
+    currId = currId + 1;
 }
 
 function makeTest(message){
-
+    //don't do anything for now
 }
 
 function runTest(message){
-
+    //don't do anything for now
 }
 
 function askQuestion(message){
