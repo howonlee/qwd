@@ -1,6 +1,7 @@
 var socket = io.connect("http://localhost:8080");
 var buffer = [];
 var snippets = [];//all the snippets
+var snippetText = [];
 var passages = [];
 var questions = [];
 var answers = []
@@ -42,19 +43,21 @@ var Snippet = function(id_, text_, type_, made_by_, parent_file_){
 }
 
 var dispMessage = function (message){
-    if (message.snippet){
-        var msg = message.snippet.text;
-        buffer.push(msg);
-        if (buffer.length > 15){
-            buffer.shift();
-        }
-        var pos = snippets.push(message);
-        if (message.snippet.type === "passage"){ passages.push(pos); }
-        if (message.snippet.type === "question"){ questions.push(pos); }
-        appendSnippet(message.snippet.made_by, message.snippet.type, msg);
-    } else {
-        appendSnippet("admin", "note", message.message);
+    $('div#chat-box')
+        .append(makeSnippet("admin", "note", message.message, currId));
+    currId = currId + 1;
+}
+
+var dispSnippet = function (message){
+    var msg = message.snippet.text;
+    buffer.push(msg);
+    if (buffer.length > 15){
+        buffer.shift();
     }
+    var pos = snippets.push(message);
+    if (message.snippet.type === "passage"){ passages.push(pos); }
+    if (message.snippet.type === "question"){ questions.push(pos); }
+    appendSnippet(message.snippet.made_by, message.snippet.type, msg);
 }
 
 var dispAnswer = function(message){
@@ -91,15 +94,64 @@ var deleteMessage = function(message){
 }
 
 socket.on('message', dispMessage);
-socket.on('passage', dispMessage);
-socket.on('question', dispMessage);
+socket.on('passage', dispSnippet);
+socket.on('question', dispSnippet);
 socket.on('answer', dispAnswer);
 socket.on('update', updateMessage);
 socket.on('delete', deleteMessage);
 
-function resetSelection(){
-    
+function getSnippets(){
+    for (var i = 0; i < selection.length; i++){
+        var currPlace = parseInt(selection[i]);
+        var currSnippet = snippets[currPlace];
+        if (currSnippet.snippet.type === "passage"){
+            snippetText.push(currSnippet.snippet.text);
+        } else if (currSnippet.snippet.type === "question"){
+            snippetText.push(currSnippet.snippet.text);
+            if (currSnippet.answers){
+                for (var i = 0; i < currSnippet.answers.length; i++){
+                    var currPos = currSnippet.answers[i];
+                    snippetText.push(snippets[currPos].snippet.text);
+                }
+            }
+        }
+    }
+    return snippetText.join("\n\n");
 }
+
+function getAllSnippets(){
+    resetSelection();
+    $(".snippet").each(function(index, elem){
+        selection.push(parseInt(this.id));
+    });
+    var txt = getSnippets();
+    selection = [];
+    return txt;
+}
+
+function getCli(){
+    var cli = 0;
+    var text = getAllSnippets();
+    alert(text);
+    alert("The Coleman-Liau Index is " + cli + ". That is, that's the US grade level that this writing is at.");
+}
+
+function resetSelection(){
+    for (var i = 0; i < currId; i++){
+        $('div#' + i).parent().removeClass("alert-info");
+    }
+    selection = [];
+}
+
+function selectAll(){
+    $(".snippet").each(function(index, elem){
+        selection.push(parseInt(this.id));
+    });
+    for (var i = 0; i < selection.length; i++){
+    $('div#' + selection[i]).parent().addClass("alert-info");
+    }
+}
+
 function toggleSelection(evt){
     var our_id = evt.target.id;
     var index = $.inArray(our_id, selection);
@@ -120,7 +172,7 @@ function toggleCodeMode(){
 }
 
 function makeSnippet(user, mode, text, _id){
-    var toReturn = '<div class="alert"><div id= "';
+    var toReturn = '<div class="alert"><div class="snippet" id= "';
     toReturn = toReturn + _id;
     toReturn = toReturn + '">';
     toReturn = toReturn + user + ": " + mode + ": ";

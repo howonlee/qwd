@@ -38,6 +38,5 @@ socket.sockets.on('connection', function(client){
         socket.sockets.json.send({ 
             message: client.id + ' is no longer available'
         });
-        numPeople = numPeople - 1;
     });
 });

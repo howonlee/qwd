@@ -55,13 +55,14 @@
                     <div class="btn-group">
                         <button type="submit" class="btn" name="delbutton" id="delbutton" onclick="deleteSnippet();" >Delete Selected</button>
                         <button type="submit" class="btn" name="updatebutton" id="updatebutton" onclick="updateSnippet();" >Update Selected</button>
-                        <button type="submit" class="btn" name="selectbutton" id="selectbutton" onclick="updateSnippet();" >Select All</button>
+                        <button type="submit" class="btn" name="resetselectbutton" id="resetselectbutton" onclick="resetSelection();" >Select None</button>
+                        <button type="submit" class="btn" name="selectbutton" id="selectbutton" onclick="selectAll();" >Select All</button>
                     </div>
                     <br/>
                     <div class="btn-group">
-                        <button type="submit" class="btn" name="cli" id="clibutton" onclick="updateSnippet();" >Coleman-Liau Index</button>
-                        <button type="submit" class="btn" name="neatify" id="neatifybutton" onclick="updateSnippet();" >Neatify</button>
+                        <button type="submit" class="btn" name="cli" id="clibutton" onclick="getCli();" >Coleman-Liau Index</button>
                         <button type="submit" class="btn" name="regex" id="regexbutton" onclick="updateSnippet();" >Regexp</button>
+                        <button type="submit" class="btn" name="codemode" id="codemodebutton" onclick="updateSnippet();" >Code Mode</button>
                     </div>
                     <br/>
                     <div class="btn-group">
@@ -69,7 +70,6 @@
                         <button type="submit" class="btn" name="exportjson" id="exportjson" onclick="alert(exportAsJSON());" >Export as JSON</button>
                         <button type="submit" class="btn" name="exportbox" id="exportbox" onclick="exportAsBox();" >Export to Box</button>
                     </div>
-
                 </form>
             </div>
         </div>
