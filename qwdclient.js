@@ -90,6 +90,14 @@ var dispMessage = function (message){
     }
 }
 
+var dispAnswer = function(message){
+    if (message.snippet && message.parentQuestion){
+        $('#' + message.parentQuestion).parent().append(makeSnippet(message.snippet.made_by, message.snippet.type, message.snippet.text, currId));
+        snippets[parseInt(message.parentQuestion)].answers.push(currId);
+        currId = currId + 1;
+    }
+}
+
 var updateMessage = function(message){
     ourSnippet = snippets[message.index];
     ourSnippet.snippet.text = message.snippetText;
@@ -112,7 +120,7 @@ socket.on('question', function(message){
 });
 
 socket.on('answer', function(message){
-    dispMessage(message);
+    dispAnswer(message);
 });
 
 socket.on('update', function(message){
@@ -198,7 +206,7 @@ function sendMessage(message){
         var tempSnippet = Snippet(client.id, msg, "passage", name, "default");
         passage = {
             snippet : tempSnippet
-        }
+        };
         socket.emit("passage", passage);
         snippets.push(passage);
     }
@@ -213,10 +221,12 @@ function askQuestion(message){
     }
     if(msg.length > 0){
         var tempSnippet = Snippet(client.id, msg, "question", name, "default");
-        socket.emit("question", {
+        question = {
             snippet : tempSnippet,
-            answers : []        
-        });
+            answers : []
+        };
+        socket.emit("question", question);
+        snippets.push(question);
     }
 }
 
@@ -224,15 +234,27 @@ function answerQuestion(message){
     if (!message){
         var msg = $("input#message").val();
         $("input#message").val("");
+        if (selection.length === 1){
+            var questionPos = selection[0];
+            if (snippets[parseInt(questionPos)].snippet.type !== "question"){
+                alert("Answer a question");
+                return false;
+            }
+        } else {
+            alert("Make exactly one selection");
+            return false;
+        }
     } else {
         var msg = message;
     }
     if(msg.length > 0){
         var tempSnippet = Snippet(client.id, msg, "answer", name, "default");
-        socket.emit("answer", {
+        answer = {
             snippet : tempSnippet,
-            parentQuestion : null
-        });
+            parentQuestion : questionPos
+        };
+        socket.emit("answer", answer);
+        snippets.push(answer);
     }
 }
 
@@ -243,7 +265,8 @@ function updateSnippet(message){
             var snippetPos = selection[0];
             $("input#message").val("");
         } else {
-            alert("Make only one selection");
+            alert("Make exactly one selection");
+            return false;
         }
     } else {
         var msgText = message.text;
