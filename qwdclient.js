@@ -7,6 +7,13 @@ var tests = [];
 var selection = [];
 var currId = 0;
 var codeMode = false; //code mode; changes a few things
+var name = "";
+
+$(document).ready(function(){
+    while (!name){
+        name = prompt("Hey, what's your name?", client.id);
+    }
+});
 
 socket.on('connection', function(client){
     client.json.send({buffer: buffer});
@@ -86,7 +93,7 @@ var dispMessage = function (message){
 var updateMessage = function(message){
     ourSnippet = snippets[message.index];
     ourSnippet.snippet.text = message.snippetText;
-    $('#' + message.index).parent().replaceWith(makeSnippet(client.id, ourSnippet.snippet.type, message.snippetText, message.index));
+    $('#' + message.index).parent().replaceWith(makeSnippet(name, ourSnippet.snippet.type, message.snippetText, message.index));
 }
 
 var deleteMessage = function(message){
@@ -188,7 +195,7 @@ function sendMessage(message){
         var msg = message; 
     }
     if(msg.length > 0){
-        var tempSnippet = Snippet(client.id, msg, "passage", client.id, "default");
+        var tempSnippet = Snippet(client.id, msg, "passage", name, "default");
         passage = {
             snippet : tempSnippet
         }
@@ -205,7 +212,7 @@ function askQuestion(message){
         var msg = message;
     }
     if(msg.length > 0){
-        var tempSnippet = Snippet(client.id, msg, "question", client.id, "default");
+        var tempSnippet = Snippet(client.id, msg, "question", name, "default");
         socket.emit("question", {
             snippet : tempSnippet,
             answers : []        
@@ -221,7 +228,7 @@ function answerQuestion(message){
         var msg = message;
     }
     if(msg.length > 0){
-        var tempSnippet = Snippet(client.id, msg, "answer", client.id, "default");
+        var tempSnippet = Snippet(client.id, msg, "answer", name, "default");
         socket.emit("answer", {
             snippet : tempSnippet,
             parentQuestion : null
