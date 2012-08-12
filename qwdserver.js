@@ -22,37 +22,20 @@ socket.sockets.on('connection', function(client){
             socket.sockets.emit("question", {
                 message: client.id + ': Question: ' + msg.snippet.text
             });
-        });//make something different for computer tests
+        });
+
+        client.on('answer', function(msg){
+            socket.sockets.emit("answer", {
+                message: client.id + ': Answer: ' + msg.snippet.text
+            });
+        });
 
         client.on('passage', function(msg){ 
             socket.sockets.emit("passage", { 
                 message: client.id + ': Passage: ' + msg.snippet.text 
                 });
         });
-
-        client.on('maketest', function(msg){
-            socket.sockets.emit("maketest", {
-                message: client.id + ' has made a test: ' + msg.snippet.text
-            });
-        });
-
-        client.on('runtest', function(msg){
-            socket.sockets.emit("runtest", {
-                message: client.id + ' has run a test: ' + msg.snippet.text
-            });
-        });
-
-        client.on('pass', function(msg){
-            socket.sockets.emit("pass", { 
-                message: client.id + ': Pass: ' + msg.message
-                });
-        });
-
-        client.on('nopass', function(msg){
-            socket.sockets.emit("nopass", { 
-                message: client.id + ": Don't pass: " + msg.message
-                });
-        });
+        
         client.on('disconnect', function(){
             socket.sockets.json.send({ 
                 message: client.id + ' is no longer available'

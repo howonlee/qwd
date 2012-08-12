@@ -30,9 +30,9 @@ var Snippet = function(id_, text_, type_, made_by_, parent_file_){
     return snip;
 }
 
-function exportAsText(passageOnly){
+function exportAsText(_selection){
     var phrases = [];
-    if (passageOnly){
+    if (_selection){
         for (var i = 0; i < snippets.length; i++){
             if (snippets[i].snippet.type == "passage"){
                 phrases.push(snippets[i]);
@@ -71,14 +71,6 @@ socket.on('passage', function(message){
     dispMessage(message);
 });
 
-socket.on('pass', function(message){
-    dispMessage(message);
-});
-
-socket.on('nopass', function(message){
-    dispMessage(message);
-});
-
 socket.on('question', function(message){
     dispMessage(message);
 });
@@ -86,26 +78,6 @@ socket.on('question', function(message){
 socket.on('disconnect', function(client){ 
     client.broadcast.json.send({ announcement: client.id + ' disconnected' });
 });
-
-function sendMessage(message){
-    if(!message){
-        var msg = $("input#message").val(); 
-        $("input#message").val('');
-    } else {
-        var msg = message; 
-    }
-    if(msg.length > 0){
-        var tempSnippet = Snippet(client.id, msg, "passage", client.id, "default");
-        passage = {
-            snippet : tempSnippet,
-            questions : [],
-            tests : [],
-            passed : false
-        }
-        socket.emit("passage", passage);
-        snippets.push(passage);
-    }
-}
 
 function setSelection(newSelection){
 //newSelection should be an array. if it's not, then we just empty selection
@@ -143,6 +115,26 @@ function runTest(message){
     //don't do anything for now
 }
 
+function sendMessage(message){
+    if(!message){
+        var msg = $("input#message").val(); 
+        $("input#message").val('');
+    } else {
+        var msg = message; 
+    }
+    if(msg.length > 0){
+        var tempSnippet = Snippet(client.id, msg, "passage", client.id, "default");
+        passage = {
+            snippet : tempSnippet,
+            questions : [],
+            tests : [],
+            passed : false
+        }
+        socket.emit("passage", passage);
+        snippets.push(passage);
+    }
+}
+
 function askQuestion(message){
     if (!message){
         var msg = $("input#message").val();
@@ -159,7 +151,7 @@ function askQuestion(message){
     }
 }
 
-function passTest(message){
+function answerQuestion(message){
     if (!message){
         var msg = $("input#message").val();
         $("input#message").val("");
@@ -167,18 +159,10 @@ function passTest(message){
         var msg = message;
     }
     if(msg.length > 0){
-        socket.emit("pass", {message : msg});
-    }
-}
-
-function dontPassTest(message){
-    if (!message){
-        var msg = $("input#message").val();
-        $("input#message").val("");
-    } else {
-        var msg = message;
-    }
-    if (msg.length > 0){
-        socket.emit("nopass", {message : msg})
+        var tempSnippet = Snippet(client.id, msg, "question", client.id, "default");
+        socket.emit("question", {
+                snippet : tempSnippet,
+                parent_passage : null
+            });
     }
 }
