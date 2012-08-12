@@ -19,21 +19,19 @@ socket.sockets.on('connection', function(client){
         client.broadcast.json.send({message: client.id + ' is now available'});
 
         client.on('question', function(msg){
-            socket.sockets.emit("question", {
-                message: client.id + ': Question: ' + msg.snippet.text
-            });
+            socket.sockets.emit("question", msg);
         });
 
         client.on('answer', function(msg){
-            socket.sockets.emit("answer", {
-                message: client.id + ': Answer: ' + msg.snippet.text
-            });
+            socket.sockets.emit("answer", msg);
         });
 
         client.on('passage', function(msg){ 
-            socket.sockets.emit("passage", { 
-                message: client.id + ': Passage: ' + msg.snippet.text 
-                });
+            socket.sockets.emit("passage", msg);
+        });
+
+        client.on('update', function(msg){
+            socket.sockets.emit("update", msg);
         });
         
         client.on('disconnect', function(){

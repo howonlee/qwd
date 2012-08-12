@@ -46,10 +46,12 @@
                     <input class="span12" type="text" name="message" id="message" value="" placeholder="Chat here"/>
                     <input id="client" name="client" value="" type="hidden" />
                     <br/>
-                    <button type="submit" class="btn btn-primary" name="send" id="send"onclick="sendMessage();" >Send</button>
+                    <button type="submit" class="btn btn-primary" name="send" id="send" onclick="sendMessage();" >Send</button>
                     <button type="submit" class="btn" name="question" id="question" onclick="askQuestion();">Ask Question</button>
                     <button type="submit" class="btn" name="answer" id="answer" onclick="answerQuestion();">Answer Question</button>
                     <button type="submit" class="btn" name="exporttext" id="exporttext" onclick="alert(exportAsText());" >Export as Text</button>
+                    <button type="submit" class="btn" name="exportjson" id="exportjson" onclick="alert(exportAsJSON());" >Export as JSON</button>
+                    <button type="submit" class="btn" name="exportbox" id="exportbox" onclick="exportAsBox();" >Export to Box</button>
                 </form>
             </div>
         </div>
