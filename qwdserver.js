@@ -40,7 +40,8 @@ server = http.createServer(onRequest).listen(8080);
 var socket = io.listen(server);
 
 socket.sockets.on('connection', function(client){
-    client.broadcast.json.send({message: client.id + ' is now available'});
+    socket.sockets.emit("message", {"message" : "New person in chatroom!"}); 
+    
     client.on('question', function(msg){
         socket.sockets.emit("question", msg);
     });

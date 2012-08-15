@@ -44,8 +44,8 @@ var Snippet = function(id_, text_, type_, made_by_, parent_file_){
 
 var dispMessage = function (message){
     $('div#chat-box')
-        .append(makeSnippet("admin", "note", message.message, currId));
-    currId = currId + 1;
+        .append(makeSnippet("admin", "note", message.message, -1));
+    //all admin messages have -1
 }
 
 var dispSnippet = function (message){
@@ -74,9 +74,12 @@ var dispAnswer = function(message){
 var updateMessage = function(message){
     for (var i = 0; i < message.selection.length; i++){
         ourSnippet = snippets[message.selection[i]];
+        console.log("Currently updating snippet: " + ourSnippet);
+        console.log("That snippet has text: " + ourSnippet.snippet.text);
+        console.log("Message has text: " + message.snippetText);
         ourSnippet.snippet.text = message.snippetText;
         $('#' + message.selection[i]).parent().replaceWith(makeSnippet(name, ourSnippet.snippet.type, message.snippetText, message.selection[i]));
-        $('div#' + currId).click(toggleSelection);
+        $('div#' + message.selection[i]).click(toggleSelection);
     }
 }
 

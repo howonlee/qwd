@@ -11,8 +11,8 @@
             }
         </style>
         <link rel="stylesheet" href="./bootstrap/css/bootstrap-responsive.css"/>
-        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-        <script type="text/javascript" src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+        <script src="http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js"></script>
         <script src="http://127.0.0.1:8080/socket.io/socket.io.js"></script> 
         <script src="./qwdclient.js"></script> 
     </head>
@@ -22,17 +22,8 @@
                 <div class="container">
                     <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
                         <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
                     </a>
                     <a class="brand" href="#">QWD</a>
-                    <div class="nav-collapse">
-                        <ul class="nav">
-                            <li class="active"><a href="#">Home</a></li>
-                            <li><a href="#">About</a></li>
-                            <li><a href="#">Contact</a></li>
-                        </ul>
-                    </div>
                 </div>
             </div>
         </div>
@@ -41,7 +32,7 @@
                 <h1>QWD</h1>
                 <p>Because I can't write in anything but a chatroom</p>
             </div>
-            <div class="span12" id="chat-box"></div>
+            <div class="span10" id="chat-box"></div>
             <div class="row" id="chat-field">
                 <form class="well" method="post" action="" onsubmit="return false;" />
                     <input class="span12" type="text" name="message" id="message" value="" placeholder="Chat here"/>
