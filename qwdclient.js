@@ -5,19 +5,12 @@ var snippetText = [];
 var passages = [];
 var questions = [];
 var answers = []
-var tests = [];
 var selection = [];
 var currId = 0;
-var codeMode = false; //code mode; changes a few things
 var name = "";
 
-$(document).ready(function(){
-    while (!name){
-        name = prompt("Hey, what's your name?", client.id);
-    }
-});
-
 socket.on('connection', function(client){
+    name = prompt("Hey, what's your name?", client.id);
     client.json.send({buffer: buffer});
 });
 
@@ -49,15 +42,18 @@ var dispMessage = function (message){
 }
 
 var dispSnippet = function (message){
-    var msg = message.snippet.text;
-    buffer.push(msg);
-    if (buffer.length > 15){
-        buffer.shift();
+    if (message.snippet){
+        var msg = message.snippet.text;
+        var type = message.snippet.type;
+        buffer.push(msg);
+        if (buffer.length > 15){
+            buffer.shift();
+        }
+        var pos = snippets.push(message);
+        if (type === "passage"){ passages.push(pos); }
+        if (type === "question"){ questions.push(pos); }
+        appendSnippet(message.snippet.made_by, type, msg);
     }
-    var pos = snippets.push(message);
-    if (message.snippet.type === "passage"){ passages.push(pos); }
-    if (message.snippet.type === "question"){ questions.push(pos); }
-    appendSnippet(message.snippet.made_by, message.snippet.type, msg);
 }
 
 var dispAnswer = function(message){
@@ -135,9 +131,6 @@ function getCli(){
     var numLetters = text.replace(/\s+/g, "" ).length;
     var numWords = text.match(/\S+/g).length;
     var numSentences = text.match(/([.!?])\s+/g).length;
-    alert(numWords);
-    alert(numLetters);
-    alert(numSentences);
     var multiplier = 100 / numWords;
     var cli = ((numLetters * multiplier * 0.0588) - (numSentences * multiplier * 0.296) - 15.8);
     alert("The Coleman-Liau Index is " + cli + ". That is, that's the US grade level that this writing is at (so a first-year undergrad is 13, for example). Try to get a large sample.");
@@ -170,31 +163,6 @@ function toggleSelection(evt){
     $('div#' + our_id).parent().toggleClass("alert-info");
 }
 
-function toggleCodeMode(){
-    if (!codeMode){
-        //turn it on
-    } else {
-        //turn it off
-    }
-}
-
-function post(path, parameters){
-    var form = $('<form></form>');
-    form.attr("method", "post");
-    form.attr("action", path);
-
-    $.each(parameters, function(key, value){
-        var field= $('<input></input>');
-        field.attr("type", "hidden");
-        field.attr("name", key);
-        field.attr("value", value);
-        form.append(field);
-    });
-
-    $(document.body).append(form);
-    form.submit();
-}
-
 function save(contents){
     var title = prompt("What do you want to name this file?", "whoopsydaisy.txt");
     message = { name : title, content : contents };
@@ -218,11 +186,6 @@ function appendSnippet(user, mode, message){
         .append(makeSnippet(user, mode, message, currId));
     $('div#' + currId).click(toggleSelection);
     currId = currId + 1;
-}
-
-//feed it in a function
-function runTest(test){
-    //don't do anything for now
 }
 
 function sendMessage(message){
