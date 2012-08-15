@@ -9,6 +9,10 @@ var selection = [];
 var currId = 0;
 var name = "";
 
+$(document).ready(function(){
+    name = prompt("Name: ", "somebody");
+});
+
 socket.on('connection', function(client){
     name = prompt("Hey, what's your name?", client.id);
     client.json.send({buffer: buffer});
@@ -70,11 +74,12 @@ var dispAnswer = function(message){
 var updateMessage = function(message){
     for (var i = 0; i < message.selection.length; i++){
         ourSnippet = snippets[message.selection[i]];
-        console.log("Currently updating snippet: " + ourSnippet);
+        console.log("Currently updating snippet by: " + ourSnippet.snippet.made_by);
         console.log("That snippet has text: " + ourSnippet.snippet.text);
-        console.log("Message has text: " + message.snippetText);
-        ourSnippet.snippet.text = message.snippetText;
-        $('#' + message.selection[i]).parent().replaceWith(makeSnippet(name, ourSnippet.snippet.type, message.snippetText, message.selection[i]));
+        console.log("Message from: " + message.snippet.made_by);
+        console.log("Message has snippet text: " + message.snippet.text);
+        ourSnippet.snippet.text = message.snippet.text;
+        $('#' + message.selection[i]).parent().replaceWith(makeSnippet(message.snippet.made_by, message.snippet.type, message.snippet.text, message.selection[i]));
         $('div#' + message.selection[i]).click(toggleSelection);
     }
 }
@@ -110,6 +115,8 @@ function getSnippets(){
             snippetText.push(currSnippet.snippet.text);
         } else if (currSnippet.snippet.type === "answer"){
             snippetText.push(currSnippet.snippet.text); //need to match later
+        } else if (currSnippet.snippet.type === "update"){
+            snippetText.push(currSnippet.snippet.text);
         }
         }
     }
@@ -257,8 +264,9 @@ function updateSnippet(message){
         var updateSelection = message.selection;
     }
     if (msgText.length > 0){
+        var tempSnippet = Snippet(client.id, msgText, "update", name, "default");
         socket.emit("update", {
-            snippetText : msgText,
+            snippet : tempSnippet,
             selection : updateSelection
         });
     }
