@@ -2,24 +2,21 @@ var socket = io.connect("http://localhost:8080");
 var buffer = [];
 var snippets = [];//all the snippets
 var snippetText = [];
-var passages = [];
-var questions = [];
-var answers = []
+var meta = [];
+var displays = [];
 var selection = [];
 var currId = 0;
 var name = "";
 
 $(document).ready(function(){
     name = prompt("Name: ", "somebody");
+    if (!name) { name = "Random Stranger"; }
+    socket.emit("newuser", name);
 });
 
-socket.on('connection', function(client){
-    name = prompt("Hey, what's your name?", client.id);
-    client.json.send({buffer: buffer});
-});
+socket.on('connection', function(client){});
 
-socket.on('disconnect', function(client){ 
-});
+socket.on('disconnect', function(client){});
 
 socket.on('connect_failed', function(){
     alert('The connection to the server failed.');
@@ -48,21 +45,18 @@ var dispMessage = function (message){
 var dispSnippet = function (message){
     if (message.snippet){
         var msg = message.snippet.text;
-        var type = message.snippet.type;
         buffer.push(msg);
         if (buffer.length > 15){
             buffer.shift();
         }
-        var pos = snippets.push(message);
-        if (type === "passage"){ passages.push(pos); }
-        if (type === "question"){ questions.push(pos); }
+        snippets.push(message);
         appendSnippet(message.snippet.made_by, type, msg);
     }
 }
 
 var dispAnswer = function(message){
     if (message.snippet && message.parentQuestion){
-        var pos = snippets.push(message);
+        snippets.push(message);
         answers.push(pos);
         $('#' + message.parentQuestion).parent().append(makeSnippet(message.snippet.made_by, message.snippet.type, message.snippet.text, currId));
         $('div#' + currId).click(toggleSelection);

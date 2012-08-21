@@ -5,7 +5,13 @@ var http = require('http'), // HTTP server
     path = require('path'),
     qs = require('querystring');
 
+var snippets = [];
+var meta = [];
+var displays = [];
+var users = [];
+
 function onRequest(req, res){
+    //replace this with express.js sometime
     request = url.parse(req.url, true);
     var action = request.pathname;
     if (request.method == "POST"){
@@ -41,17 +47,28 @@ var socket = io.listen(server);
 
 socket.sockets.on('connection', function(client){
     socket.sockets.emit("message", {"message" : "New person in chatroom!"}); 
+
+    client.on('newuser', function(msg){
+        users.push({client.id : msg});
+        console.log(users);
+    });
     
     client.on('question', function(msg){
         socket.sockets.emit("question", msg);
+        snippets.push(msg);
+        console.log(snippets);
     });
 
     client.on('answer', function(msg){
         socket.sockets.emit("answer", msg);
+        snippets.push(msg);
+        console.log(snippets);
     });
 
     client.on('passage', function(msg){ 
         socket.sockets.emit("passage", msg);
+        snippets.push(msg);
+        console.log(snippets);
     });
 
     client.on('update', function(msg){
@@ -64,7 +81,7 @@ socket.sockets.on('connection', function(client){
 
     client.on('disconnect', function(){
         socket.sockets.json.send({ 
-            message: client.id + ' is no longer available'
+            message: users[client.id] + ' is no longer available'
         });
     });
 
